@@ -15,6 +15,7 @@ class Sprite {
         this.width = 50
         this.height = 150
         this.lastKey = undefined
+        this.health = 100
         this.attackBox = {
             position: {
                 x:this.position.x,
@@ -144,11 +145,13 @@ function animate() {
     //detect for collision
     if (rectangularCollision({rectangular1:player,rectangular2:enemy}) && player.isAttacking) {
         player.isAttacking = false
-        console.log('go')
+        enemy.health -= 20
+        document.querySelector('#enemyHealth').style.width = enemy.health + "%"
     }
     if (rectangularCollision({rectangular1:enemy,rectangular2:player}) && enemy.isAttacking) {
         enemy.isAttacking = false
-        console.log('enemy attack')
+        player.health -= 20
+        document.querySelector('#playerHealth').style.width = player.health + "%"
     }
 }
 
