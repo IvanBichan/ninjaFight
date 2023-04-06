@@ -65,6 +65,10 @@ const player = new Fighter({
         attack1: {
             imageSrc: './img/samuraiMack/Attack1.png',
             framesMax: 6,
+        },
+        takeHit: {
+            imageSrc: './img/samuraiMack/Take Hit - white silhouette.png',
+            framesMax: 4,
         }
     },
     attackBox: {
@@ -117,6 +121,10 @@ const enemy = new Fighter({
         attack1: {
             imageSrc: './img/kenji/Attack1.png',
             framesMax: 4,
+        },
+        takeHit: {
+            imageSrc: './img/kenji/Take hit.png',
+            framesMax: 3,
         }
     },
     attackBox: {
@@ -192,25 +200,26 @@ function animate() {
     } else if (enemy.velocity.y > 0) {
         enemy.switchSprite('fall')
     }
-//detect for collision
+//detect for collision and enemy gets hit
     if (rectangularCollision({rectangular1: player, rectangular2: enemy}) &&
         player.isAttacking &&
         player.frameCurrent === 4
     ) {
+        enemy.takeHit()
         player.isAttacking = false
-        enemy.health -= 20
         document.querySelector('#enemyHealth').style.width = enemy.health + "%"
     }
 //if player misses
     if(player.isAttacking && player.frameCurrent === 4) {
         player.isAttacking = false
     }
+    //this is where our player get hit
     if (rectangularCollision({rectangular1: enemy, rectangular2: player}) &&
         enemy.isAttacking &&
         enemy.frameCurrent === 2
     ) {
+        player.takeHit()
         enemy.isAttacking = false
-        player.health -= 20
         document.querySelector('#playerHealth').style.width = player.health + "%"
     }
 //if enemy misses
