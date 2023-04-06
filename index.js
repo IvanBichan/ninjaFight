@@ -66,6 +66,14 @@ const player = new Fighter({
             imageSrc: './img/samuraiMack/Attack1.png',
             framesMax: 6,
         }
+    },
+    attackBox: {
+        offset: {
+            x: 50,
+            y: 50,
+        },
+        width: 208,
+        height: 50,
     }
 })
 
@@ -110,6 +118,14 @@ const enemy = new Fighter({
             imageSrc: './img/kenji/Attack1.png',
             framesMax: 4,
         }
+    },
+    attackBox: {
+        offset: {
+            x: -180,
+            y: 50,
+        },
+        width: 180,
+        height: 50,
     }
 })
 
@@ -177,16 +193,30 @@ function animate() {
         enemy.switchSprite('fall')
     }
 //detect for collision
-    if (rectangularCollision({rectangular1: player, rectangular2: enemy}) && player.isAttacking) {
+    if (rectangularCollision({rectangular1: player, rectangular2: enemy}) &&
+        player.isAttacking &&
+        player.frameCurrent === 4
+    ) {
         player.isAttacking = false
         enemy.health -= 20
         document.querySelector('#enemyHealth').style.width = enemy.health + "%"
     }
-    if (rectangularCollision({rectangular1: enemy, rectangular2: player}) && enemy.isAttacking) {
+//if player misses
+    if(player.isAttacking && player.frameCurrent === 4) {
+        player.isAttacking = false
+    }
+    if (rectangularCollision({rectangular1: enemy, rectangular2: player}) &&
+        enemy.isAttacking &&
+        enemy.frameCurrent === 2
+    ) {
         enemy.isAttacking = false
         player.health -= 20
         document.querySelector('#playerHealth').style.width = player.health + "%"
     }
+//if enemy misses
+        if(enemy.isAttacking && enemy.frameCurrent === 2) {
+            enemy.isAttacking = false
+        }
 //end game based on health
     if (enemy.health <= 0 || player.health < -0) {
         determinateWinner({player, enemy, timerId})
